@@ -32,7 +32,18 @@ Out [1]:
 
 
 <div>
-<table border="1" class="dataframe">
+<table border="0" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Unnamed: 0</th>
+      <th>Sepal_length</th>
+      <th>Speal_width</th>
+      <th>Petal_lenth</th>
+      <th>Petal_width</th>
+      <th>test_label</th>
+    </tr>
+  </thead>
   <tbody>
     <tr>
       <th>0</th>
@@ -130,7 +141,18 @@ Out [3]:
 
 
 <div>
-<table border="1" class="dataframe">
+<table border="0" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Unnamed: 0</th>
+      <th>Sepal_length</th>
+      <th>Speal_width</th>
+      <th>Petal_lenth</th>
+      <th>Petal_width</th>
+      <th>test_label</th>
+    </tr>
+  </thead>
   <tbody>
     <tr>
       <th>0</th>
