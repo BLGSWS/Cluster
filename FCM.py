@@ -2,26 +2,6 @@
 import numpy as np
 import pandas as pd
 
-def read(filepath):
-    data = []
-    with file(filepath, "r") as myfile:
-        while 1:
-            line = myfile.readline()
-            line = line.replace("\n", "")
-            if not line:
-                break
-            attributes = line.split(",")
-            data.append(attributes)
-        mat = np.array(data)
-        frame = pd.DataFrame(data=mat,
-                             columns=["Sepal_length",
-                                      "Speal_width",
-                                      "Petal_lenth",
-                                      "Petal_width",
-                                      "test_label"])
-        frame = frame.sample(frac=1.0).reset_index(drop=True)
-        frame.to_csv("Iris.csv")
-        return frame
 
 class FCM(object):
 
@@ -123,5 +103,3 @@ class FCM(object):
         #分类
         predict = self.__select(u_mat)
         self.data_frame["train_label"] = pd.Series(predict)
-
-

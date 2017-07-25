@@ -22,41 +22,17 @@ import pandas as pd
 import FCM
 ```
 
-
+In [1]:
 ```python
 data = pd.read_csv("Iris.csv")
 data.head()
 ```
-
+Out [1]:
 
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Unnamed: 0</th>
-      <th>Sepal_length</th>
-      <th>Speal_width</th>
-      <th>Petal_lenth</th>
-      <th>Petal_width</th>
-      <th>test_label</th>
-    </tr>
-  </thead>
   <tbody>
     <tr>
       <th>0</th>
@@ -108,9 +84,9 @@ data.head()
 </div>
 
 
-
 接受Dataframe型数据，labels为参数名
 
+In [2]:
 
 ```python
 fcm = FCM.FCM(m=4, n=3, j=0.0001, count=100)
@@ -118,6 +94,7 @@ labels = ["Sepal_length", "Speal_width", "Petal_lenth", "Petal_width"]
 fcm.get_data(data, labels)
 fcm.cluster()
 ```
+Out [2]:
 
     error: 24.928166
     error: 23.645085
@@ -143,41 +120,17 @@ fcm.cluster()
 
 对应的聚类结果会添加到新列train_label中
 
+In [3]:
 
 ```python
 data.head()
 ```
-
+Out [3]:
 
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Unnamed: 0</th>
-      <th>Sepal_length</th>
-      <th>Speal_width</th>
-      <th>Petal_lenth</th>
-      <th>Petal_width</th>
-      <th>test_label</th>
-      <th>train_label</th>
-    </tr>
-  </thead>
   <tbody>
     <tr>
       <th>0</th>
@@ -237,12 +190,16 @@ data.head()
 
 如果训练集已有标记，可计算聚类准确度和标记到聚类结果的映射
 
+In [4]:
 
 ```python
 map_dict = fcm.kind_map("test_label")
 print map_dict
 ```
 
-    0.906666666667
+Out [4]:
+
+    accuracy: 0.906666666667
     {'Iris-virginica': '2', 'Iris-setosa': '0', 'Iris-versicolor': '1'}
-    
+
+
