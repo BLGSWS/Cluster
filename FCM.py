@@ -1,22 +1,19 @@
 #coding: utf-8
-import numpy as np
 import pandas as pd
+import numpy as np
 
+from Cluster import Base_cluster
+from Cluster import Tools
 
-class FCM(object):
+class FCM(Base_cluster):
 
-    def __init__(self, m=4, n=3, j=0.0001, count=100):
+    def __init__(self, n, m=4, j=0.0001, count=100):
+        Base_cluster.__init__(self, n, count)
         self.M = m
-        self.N = n
         self.J = j
-        self.COUNT = count
-        self.data_frame = pd.DataFrame()
-        self.data_mat = [[]]
-        self.map_dict = {}
-
+    
     def get_data(self, data_frame, cols):
-        self.data_frame = data_frame
-        self.data_mat = np.array(data_frame[cols]).astype("float64")
+        Base_cluster.get_data(self, data_frame, cols)
 
     def __distant(self, x, y):
         return np.sum((x-y)**2)**0.5
@@ -43,42 +40,8 @@ class FCM(object):
                 err += u_mat[i, j]**self.M*self.__distant(x_mat[j, :], c_mat[i, :])**2.0
         return err
 
-    def __select(self, u_mat):
-        predict = []
-        for i in xrange(u_mat.shape[1]):
-            kind = np.argmax(np.transpose(u_mat[:, i]))
-            predict.append(kind)
-        return predict
-
-    def kind_map(self, test_label):
-        count_dict = {}
-        map_dict = {}
-        for i in xrange(self.N*10):
-            instance = "%s_%s"%(self.data_frame[test_label][i], self.data_frame.train_label[i])
-            if instance not in count_dict.keys():
-                count_dict[instance] = 1
-            else:
-                count_dict[instance] += 1
-        #选出前N
-        for _ in xrange(self.N):
-            max_value = 0
-            max_instance_key = ""
-            for key in count_dict:
-                if int(count_dict[key]) > max_value:
-                    max_value = int(count_dict[key])
-                    max_instance_key = key
-            max_instance = max_instance_key.split("_")
-            map_dict[max_instance[0]] = max_instance[1]
-            del count_dict[max_instance_key]
-        count = 0
-        for i in xrange(self.data_frame.shape[0]):
-            if int(map_dict[self.data_frame.test_label[i]]) == int(self.data_frame.train_label[i]):
-                count += 1
-        print "accuracy: %f"%(float(count)/self.data_frame.shape[0])
-        self.map_dict = map_dict
-        return map_dict
-
-    def cluster(self):
+    def cluster(self, train_label="result"):
+        Base_cluster.cluster(self, train_label)
         #随机生成隶属矩阵u_mat
         u_mat = np.random.random((self.N, self.data_mat.shape[0]))
         for i in xrange(u_mat.shape[1]):
@@ -90,7 +53,7 @@ class FCM(object):
         error1 = 1.0
         #迭代
         count = 0
-        for _ in xrange(self.COUNT):
+        for _ in xrange(self.MAX_COUNT):
             c_mat = self.__c_iterator(self.data_mat, u_mat, c_mat)
             u_mat = self.__u_iterator(self.data_mat, u_mat, c_mat)
             error2 = self.__error(self.data_mat, u_mat, c_mat)
@@ -101,5 +64,19 @@ class FCM(object):
                     break
             error1 = error2
         #分类
-        predict = self.__select(u_mat)
-        self.data_frame["train_label"] = pd.Series(predict)
+        for i in xrange(u_mat.shape[1]):
+            _class = np.argmax(np.transpose(u_mat[:, i]))
+            self.data_frame.loc[i, train_label] = _class
+        return self.data_frame
+
+if __name__ == "__main__":
+    data = pd.read_csv("iris.csv")
+    data = data.sample(frac=1)
+    data = data.reset_index(drop=True)
+    fcm = FCM(3)
+    cols = data.columns.drop("class")
+    fcm.get_data(data, cols)
+    fcm.cluster("result")
+    print Tools.external_value(data, "result", "class")
+
+
